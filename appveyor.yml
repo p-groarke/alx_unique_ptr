@@ -3,7 +3,7 @@ image:
   - Visual Studio 2019
 platform:
   - x64
-  - x86
+  - Win32
 configuration:
   - Debug
   - Release
@@ -22,7 +22,7 @@ install:
   - cmd: cd ..
   - cmd: conan user
   - cmd: conan --version
-  - cmd: conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+  - cmd: conan remote add bincrafters https://api.bintray.com/conan/conan/conan-center
   - cmd: cd c:\projects\alx_unique_ptr
 test_script:
   - cmd: c:\projects\alx_unique_ptr\build\bin\alx_unique_ptr_tests.exe
