@@ -1,39 +1,35 @@
 language: cpp
 
 before_install:
+  - eval "${MATRIX_EVAL}"
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       brew update;
       brew upgrade cmake;
       brew install cmake python3;
     fi
-  # - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-  #     eval "${MATRIX_EVAL}";
-  #     DEPS_DIR="${TRAVIS_BUILD_DIR}/deps";
-  #     mkdir ${DEPS_DIR} && cd ${DEPS_DIR};
-  #     CMAKE_URL="https://cmake.org/files/v3.10/cmake-3.10.0-Linux-x86_64.tar.gz";
-  #     mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake;
-  #     export PATH=${DEPS_DIR}/cmake/bin:${PATH};
-  #     cd ..;
-  #   fi
 install:
-  - pyenv global 3.7.1
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      pyenv global 3.7.1;
+    fi
   - pip3 install conan
   - conan user
   - conan remote add bincrafters https://api.bintray.com/conan/conan/conan-center
   - conan profile new default --detect
-  - conan profile update settings.compiler.libcxx=libstdc++11 default
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      conan profile update settings.compiler.libcxx=libstdc++11 default;
+    fi
 
 matrix:
   include:
     - os: osx
       osx_image: xcode11.2
       env:
-        - CONFIG=Release
+        - MATRIX_EVAL="CC=clang && CXX=clang++ && CONFIG=Debug"
 
     - os: osx
       osx_image: xcode11.2
       env:
-        - CONFIG=Debug
+        - MATRIX_EVAL="CC=clang && CXX=clang++ && CONFIG=Release"
 
     - os: linux
       dist: bionic
@@ -44,9 +40,6 @@ matrix:
           packages:
             - gcc-7
             - g++-7
-            # - python3
-            # - python3-pip
-            # - python3-setuptools
       env:
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && CONFIG=Debug"
 
@@ -59,9 +52,6 @@ matrix:
           packages:
             - gcc-7
             - g++-7
-            # - python3
-            # - python3-pip
-            # - python3-setuptools
       env:
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && CONFIG=Release"
 
@@ -74,9 +64,6 @@ matrix:
           packages:
             - gcc-8
             - g++-8
-            # - python3
-            # - python3-pip
-            # - python3-setuptools
       env:
         - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8 && CONFIG=Debug"
 
@@ -89,17 +76,14 @@ matrix:
           packages:
             - gcc-8
             - g++-8
-            # - python3
-            # - python3-pip
-            # - python3-setuptools
       env:
         - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8 && CONFIG=Release"
 
 script:
   - mkdir build && cd build
-  - cmake .. -DBUILD_TESTING=On
-  - cmake --build .
-  - ./bin/alx_unqiue_ptr_tests
+  - cmake .. -DBUILD_TESTING=On -DCMAKE_BUILD_TYPE=$CONFIG
+  - cmake --build . --config $CONFIG
+  - ./bin/alx_unique_ptr_tests
 
 notifications:
   email:

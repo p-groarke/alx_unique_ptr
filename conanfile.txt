@@ -9,4 +9,5 @@ cmake_paths
 
 [imports]
 bin, *.pdb -> ./bin
+bin, *.pdb -> ./lib
 bin, *.dll -> ./bin
