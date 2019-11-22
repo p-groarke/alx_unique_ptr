@@ -336,3 +336,6 @@ __pycache__/
 
 # OpenCover UI analysis results
 OpenCover/
+
+# Xcode auto generated projects
+cmake-xcode/*
