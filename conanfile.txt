@@ -3,6 +3,7 @@ gtest/1.8.0@bincrafters/stable
 
 [generators]
 cmake_multi
+cmake_paths
 
 [options]
 

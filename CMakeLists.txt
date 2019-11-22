@@ -78,6 +78,8 @@ if (${BUILD_TESTING})
 	add_executable(${TEST_NAME} ${TEST_SOURCES})
 	# set_property(TARGET ${TEST_NAME} PROPERTY CXX_STANDARD 17) # simplify unit tests with if constexpr
 	target_link_libraries(${TEST_NAME} PRIVATE ${PROJECT_NAME} CONAN_PKG::gtest)
+  target_include_directories(${TEST_NAME} PUBLIC CONAN_PKG::gtest)
+  # message("DSDSDSD  " ${CONAN_PKG::gtest})
 	gtest_discover_tests(${TEST_NAME})
 	add_dependencies(${TEST_NAME} ${PROJECT_NAME})
 
