@@ -3,7 +3,8 @@
 #include <cstddef>
 #include <iostream>
 #include <memory>
-// std::weak_ptr<int>
+#include <atomic>
+
 namespace alx {
 template <class _Tp, class _Deleter = std::default_delete<_Tp>>
 class unique_ptr;
