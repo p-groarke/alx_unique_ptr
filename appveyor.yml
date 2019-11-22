@@ -8,14 +8,6 @@ configuration:
   - Debug
   - Release
 clone_folder: c:\projects\alx_unique_ptr
-before_build:
-  - cmd: cd c:\projects\alx_unique_ptr
-  - cmd: mkdir build
-  - cmd: cd build
-  - cmd: cmake .. -A%PLATFORM% -DBUILD_TESTING=On
-build:
-  project: c:\projects\alx_unique_ptr\build\alx_unique_ptr.sln
-  parallel: true
 install:
   - cmd: set PATH=%PATH%;%PYTHON%/Scripts/
   - cmd: pip.exe install conan
@@ -23,6 +15,31 @@ install:
   - cmd: conan user
   - cmd: conan --version
   - cmd: conan remote add bincrafters https://api.bintray.com/conan/conan/conan-center
+  - cmd: conan profile new default --detect
   - cmd: cd c:\projects\alx_unique_ptr
+build:
+  project: c:\projects\alx_unique_ptr\build\alx_unique_ptr.sln
+  parallel: true
 test_script:
   - cmd: c:\projects\alx_unique_ptr\build\bin\alx_unique_ptr_tests.exe
+for:
+  -
+    matrix:
+      only:
+        - platform: x64
+    before_build:
+      - cmd: conan profile update settings.arch="x86_64" default
+      - cmd: cd c:\projects\alx_unique_ptr
+      - cmd: mkdir build
+      - cmd: cd build
+      - cmd: cmake .. -A %PLATFORM% -DBUILD_TESTING=On
+  -
+    matrix:
+      only:
+        - platform: Win32
+    before_build:
+      - cmd: conan profile update settings.arch="x86" default
+      - cmd: cd c:\projects\alx_unique_ptr
+      - cmd: mkdir build
+      - cmd: cd build
+      - cmd: cmake .. -A %PLATFORM% -DBUILD_TESTING=On
