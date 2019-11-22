@@ -1,3 +1,4 @@
+#include "test_util/privablic.h"
 #include <alx/unique_ptr.hpp>
 #include <gtest/gtest.h>
 
@@ -13,12 +14,38 @@ void operator delete(void* p) noexcept {
 	free(p);
 }
 
+
+struct A {
+	int a, b, c;
+};
+
+template <typename T>
+struct UniquePtrGetWeakData {
+	typedef alx::detail::unique_weak_data<T>* (alx::unique_ptr<T>::*type)();
+};
+
+template <typename T>
+struct WeakGetWeakData {
+	typedef alx::detail::unique_weak_data<T>*(alx::weak_ptr<T>::*type);
+};
+
+template struct private_method<UniquePtrGetWeakData<A>,
+		&alx::unique_ptr<A>::get_weak_data>;
+template struct private_member<WeakGetWeakData<A>,
+		&alx::weak_ptr<A>::_weak_data>;
+
+template <typename T>
+inline alx::detail::unique_weak_data<T>* get_weak_data(alx::unique_ptr<T>& u) {
+	return (&u->*func<UniquePtrGetWeakData<T>>::ptr)();
+}
+
+template <typename T>
+inline alx::detail::unique_weak_data<T>* get_weak_data(alx::weak_ptr<T>& u) {
+	return u.*member<WeakGetWeakData<T>>::value;
+}
+
 namespace {
 TEST(alx_unique_ptr, move_constructor) {
-	struct A {
-		int a, b, c;
-	};
-
 	alx::unique_ptr<A> p0 = new A{ 8, 2, 90 };
 
 	EXPECT_TRUE(p0.is_valid());
@@ -31,10 +58,6 @@ TEST(alx_unique_ptr, move_constructor) {
 }
 
 TEST(alx_unique_ptr, move_equal) {
-	struct A {
-		int a, b, c;
-	};
-
 	alx::unique_ptr<A> p0 = new A{ 8, 2, 90 };
 	alx::unique_ptr<A> p1;
 
@@ -48,11 +71,8 @@ TEST(alx_unique_ptr, move_equal) {
 	EXPECT_TRUE(p1->a == 8 && p1->b == 2 && p1->c == 90);
 }
 
-TEST(alx_unique_ptr, weak_unique_alive) {
-	struct A {
-		int a, b, c;
-	};
 
+TEST(alx_unique_ptr, weak_unique_alive) {
 	alx::unique_ptr<A> p0 = new A{ 8, 2, 90 };
 	alx::weak_ptr<A> w0(p0);
 
@@ -65,18 +85,14 @@ TEST(alx_unique_ptr, weak_unique_alive) {
 	w0.reset();
 
 	EXPECT_FALSE(w0.is_valid());
-	EXPECT_TRUE(p0.test__has_weak_data());
+	EXPECT_FALSE(get_weak_data(p0) == nullptr);
 
-	auto* weak_data = p0.test__get_weak_data();
+	auto* weak_data = get_weak_data(p0);
 	EXPECT_EQ(weak_data->count(), 0);
 	EXPECT_TRUE(weak_data->get() == p0.get());
 }
 
 TEST(alx_unique_ptr, case_weak_unique_dead) {
-	struct A {
-		int a, b, c;
-	};
-
 	alx::unique_ptr<A> p0 = new A{ 8, 2, 90 };
 	alx::weak_ptr<A> w0(p0);
 
@@ -89,9 +105,9 @@ TEST(alx_unique_ptr, case_weak_unique_dead) {
 	p0.reset();
 
 	EXPECT_FALSE(w0.is_valid());
-	EXPECT_FALSE(p0.test__has_weak_data());
+	EXPECT_EQ(get_weak_data(p0), nullptr);
 
-	auto* weak_data = w0.test__get_weak_data();
+	auto* weak_data = get_weak_data(w0);
 	EXPECT_EQ(weak_data->count(), 1);
 	EXPECT_FALSE(weak_data->is_valid());
 	EXPECT_EQ(weak_data->get(), nullptr);

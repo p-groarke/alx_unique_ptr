@@ -247,15 +247,6 @@ private:
 	inline bool has_weak_data() const {
 		return _weak_data != nullptr;
 	}
-
-public:
-	inline bool test__has_weak_data() const {
-		return has_weak_data();
-	}
-
-	inline weak_data_type* test__get_weak_data() {
-		return get_weak_data();
-	}
 };
 
 // template<typename T>
@@ -412,15 +403,6 @@ public:
 
 private:
 	weak_data_type* _weak_data = nullptr;
-
-public:
-	inline bool test__has_weak_data() const {
-		return _weak_data != nullptr;
-	}
-
-	inline weak_data_type* test__get_weak_data() {
-		return _weak_data;
-	}
 };
 
 template <class _Tp>
@@ -447,6 +429,7 @@ public:
 	inline weak_ptr<element_type> weak_from_this() noexcept {
 		return _weak_this;
 	}
+
 	//    inline weak_ptr<const _Tp> weak_from_this() const noexcept { return
 	//    _weak_this; }
 
