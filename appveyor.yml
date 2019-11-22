@@ -26,3 +26,16 @@ install:
   - cmd: cd c:\projects\alx_unique_ptr
 test_script:
   - cmd: c:\projects\alx_unique_ptr\build\bin\alx_unique_ptr_tests.exe
+matrix:
+  - fast_finish: true
+for:
+  -
+    matrix:
+    platform: x64
+    before_build:
+      - cmd: cmake .. -A x64 -DBUILD_TESTING=On
+  -
+    matrix:
+    platform: x86
+    before_build:
+      - cmd: cmake .. -A Win32 -DBUILD_TESTING=On
