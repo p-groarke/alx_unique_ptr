@@ -1,5 +1,5 @@
 #include "test_util/privablic.h"
-#include <alx/unique_ptr.hpp>
+#include <alx_unique_ptr/unique_ptr.hpp>
 #include <gtest/gtest.h>
 
 size_t allocations = 0;
