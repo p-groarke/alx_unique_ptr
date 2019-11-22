@@ -7,7 +7,7 @@ before_install:
       brew install cmake python3;
     fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-      pyenv global 3.7.1
+      pyenv global 3.7.1;
       # eval "${MATRIX_EVAL}";
       # DEPS_DIR="${TRAVIS_BUILD_DIR}/deps";
       # mkdir ${DEPS_DIR} && cd ${DEPS_DIR};
@@ -37,6 +37,8 @@ matrix:
       dist: bionic
       addons:
         apt:
+          sources:
+            - ubuntu-toolchain-r-test
           packages:
             - gcc-7
             - g++-7
@@ -50,6 +52,8 @@ matrix:
       dist: bionic
       addons:
         apt:
+          sources:
+            - ubuntu-toolchain-r-test
           packages:
             - gcc-7
             - g++-7
@@ -63,6 +67,8 @@ matrix:
       dist: bionic
       addons:
         apt:
+          sources:
+            - ubuntu-toolchain-r-test
           packages:
             - gcc-8
             - g++-8
@@ -76,6 +82,8 @@ matrix:
       dist: bionic
       addons:
         apt:
+          sources:
+            - ubuntu-toolchain-r-test
           packages:
             - gcc-8
             - g++-8
