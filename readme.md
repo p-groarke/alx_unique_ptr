@@ -1,4 +1,7 @@
 # alx_unique_ptr
+[![Build Status](https://travis-ci.org/p-groarke/alx_unique_ptr.svg?branch=master)](https://travis-ci.org/p-groarke/alx_unique_ptr)
+[![Build status](https://ci.appveyor.com/api/projects/status/994h0yod285e5nfl/branch/master?svg=true)](https://ci.appveyor.com/project/p-groarke/alx-unique-ptr/branch/master)
+
 A unique_ptr implementation with weak_ptr capabilities.
 
 ## Examples
